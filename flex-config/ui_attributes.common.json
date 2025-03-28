@@ -426,6 +426,9 @@
         "enabled": false,
         "exclude_attributes": [],
         "exclude_queues": []
+      },
+      "flexinsights_callid": {
+        "enabled": true
       }
     }
   }
