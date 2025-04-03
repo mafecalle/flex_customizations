@@ -5,12 +5,14 @@ import * as FlexInsightsHelper from '../../helpers/flexReportHelper';
 import { validateInternalCall } from '../../helpers/outboundHelper';
 
 export const actionEvent = FlexActionEvent.after;
-export const actionName = FlexAction.SelectTask;
+export const actionName = FlexAction.AcceptTask;
 export const actionHook = function UpdateTaskAtributesOutboundCall(flex: typeof Flex) {
   flex.Actions.addListener(`${actionEvent}${actionName}`, async (payload) => {
     if (!payload.task ) {
       return;
     }
+
+    if (payload.task.attributes.direction === 'outbound' ) {
 
     const {  taskSid} = payload.task;
 
@@ -21,6 +23,7 @@ export const actionHook = function UpdateTaskAtributesOutboundCall(flex: typeof 
       payload.task.callSid = callSid;
       console.log('callsid inserted:',payload.task.callSid)
       FlexInsightsHelper.setInteractionIdAttribute(taskSid,"conversation_attribute_1", callSid);
+    }
     
 
   });

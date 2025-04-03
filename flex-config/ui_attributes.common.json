@@ -164,7 +164,7 @@
         "configuration": [
           {
             "channel": "voice",
-            "auto_accept": false,
+            "auto_accept": true,
             "auto_select": true,
             "auto_wrapup": true,
             "required_attributes": [],
@@ -176,7 +176,7 @@
           },
           {
             "channel": "chat",
-            "auto_accept": false,
+            "auto_accept": true,
             "auto_select": true,
             "auto_wrapup": true,
             "required_attributes": [],

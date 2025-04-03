@@ -71,10 +71,14 @@ const addCallDataToTask = async (task: ITask, callSid: string | null, recording:
       channels: ['customer', 'others'],
     };
 
+     // Last Reviewed: 2025/04/03 (YYYY/MM/DD)
+     //[CNX] Due to Zendesk Integration Add CallRecording URL to Task Attributes
+
     switch (getChannelToRecord()) {
       case 'worker':
         newAttributes = {
           ...newAttributes,
+          CallRecording: recordingUrl,
           reservation_attributes: {
             [reservationSid]: {
               media: [mediaObj],
@@ -84,6 +88,7 @@ const addCallDataToTask = async (task: ITask, callSid: string | null, recording:
         break;
       case 'customer':
         newAttributes.conversations = {
+          CallRecording: recordingUrl,
           media: [mediaObj],
         };
         break;
