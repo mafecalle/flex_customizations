@@ -64,12 +64,32 @@ const addCallDataToTask = async (task: ITask, callSid: string | null, recording:
     // worker leg, which could result in multiple recordings per call in the case
     // of a transfer, then you'll want to use the reservation_attributes pattern:
     // https://www.twilio.com/docs/flex/developer/insights/custom-media-attached-conversations#add-media-links
-    const mediaObj = {
+    
+    /*const mediaObj = {
       url: recordingUrl,
       type: 'VoiceRecording',
       start_time: recordingStartTime,
       channels: ['customer', 'others'],
     };
+    */
+
+    /*
+
+    const mediaObj = [
+      {
+        url: recordingUrl,
+        type: 'VoiceRecording',
+        start_time: recordingStartTime,
+        channels: ['customer', 'others'],
+      },
+      {
+        url: 'https://api.twilio.com/2010-04-01/Accounts/{}/Recordings/RE928c5b00ddcda43a8bab0f45ec6875ee',
+        type: 'Embedded',
+        title: "Mono Recording"
+      }  
+   ];
+
+   */
 
      // Last Reviewed: 2025/04/03 (YYYY/MM/DD)
      //[CNX] Due to Zendesk Integration Add CallRecording URL to Task Attributes
@@ -79,17 +99,17 @@ const addCallDataToTask = async (task: ITask, callSid: string | null, recording:
         newAttributes = {
           ...newAttributes,
           CallRecording: recordingUrl,
-          reservation_attributes: {
+         /* reservation_attributes: {
             [reservationSid]: {
               media: [mediaObj],
             },
-          },
+          },*/
         };
         break;
       case 'customer':
         newAttributes.conversations = {
           CallRecording: recordingUrl,
-          media: [mediaObj],
+         // media: [mediaObj],
         };
         break;
       default:
