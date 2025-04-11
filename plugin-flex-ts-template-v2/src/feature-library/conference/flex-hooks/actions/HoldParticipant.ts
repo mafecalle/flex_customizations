@@ -1,7 +1,7 @@
 import * as Flex from '@twilio/flex-ui';
 
 import ProgrammableVoiceService from '../../../../utils/serverless/ProgrammableVoice/ProgrammableVoiceService';
-import { isConferenceEnabledWithoutNativeXWT } from '../../config';
+import { isConferenceEnabledWithoutNativeXWT,isHoldButtonAlwaysEnabled } from '../../config';
 import { FlexActionEvent, FlexAction } from '../../../../types/feature-loader';
 import logger from '../../../../utils/logger';
 
@@ -13,7 +13,8 @@ export const actionHook = function handleHoldConferenceParticipant(flex: typeof 
   flex.Actions.addListener(`${actionEvent}${actionName}`, async (payload, abortFunction) => {
     const { participantType, targetSid: participantSid, task } = payload;
 
-    if (participantType !== 'unknown') {
+    //[CNX] added config to validate holdbutton enablement
+    if (!isHoldButtonAlwaysEnabled() && participantType !== 'unknown') {
       return;
     }
 
