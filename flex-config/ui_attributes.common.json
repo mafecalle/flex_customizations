@@ -73,8 +73,8 @@
       },
       "conference": {
         "enabled": true,
-        "hold_workaround": true,
-        "hold_button_always_enabled": true
+        "hold_workaround": false,
+        "hold_button_always_enabled": false
       },
       "enhanced_crm_container": {
         "enabled": true,
