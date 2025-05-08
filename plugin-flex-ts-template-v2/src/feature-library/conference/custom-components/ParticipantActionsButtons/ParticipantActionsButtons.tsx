@@ -12,6 +12,8 @@ import {
 
 import AppState from '../../../../types/manager/AppState';
 import { StringTemplates } from '../../flex-hooks/strings/Conference';
+import { isHoldButtonAlwaysEnabled } from '../../config';
+
 
 interface ThemeOnlyProps {
   theme?: any;
@@ -138,7 +140,7 @@ const ParticipantActionsButtons = (props: OwnProps) => {
       : templates[StringTemplates.HoldParticipant]();
     const kickParticipantTooltip = templates[StringTemplates.RemoveParticipant]();
 
-    const holdIcon = 'Hold';
+    const holdIcon = 'HoldBold';
     const unholdIcon = 'HoldOff';
 
     return (
@@ -146,7 +148,8 @@ const ParticipantActionsButtons = (props: OwnProps) => {
         <IconButton
           icon={participant.onHold ? `${unholdIcon}` : `${holdIcon}`}
           className="ParticipantCanvas-HoldButton"
-          disabled={!TaskHelper.canHold(task) || participant.status !== 'joined'}
+          //[CNX] added config to validate holdbutton enablement
+          disabled={!isHoldButtonAlwaysEnabled() && (!TaskHelper.canHold(task) || participant.status !== 'joined')}
           onClick={onHoldParticipantClick}
           variant="secondary"
           title={holdParticipantTooltip}
