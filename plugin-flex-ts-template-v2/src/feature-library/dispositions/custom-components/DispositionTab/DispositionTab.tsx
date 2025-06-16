@@ -83,6 +83,15 @@ const DispositionTab = ({ task }: OwnProps) => {
     // We do this here because WrapupTask does not handle a customer-ended task,
     // and doing this in the taskWrapup event seems to not work.
     if (task?.status === 'wrapping') {
+      // Verificar si no hay disposición seleccionada y hay disposiciones disponibles
+      const dispositions = getDispositionsForQueue(queueSid, queueName);
+      console.log('✅ dispositions', dispositions);
+      if (dispositions.length > 0 && !taskFromRedux?.disposition) {
+        // Seleccionar la primera disposición
+        console.log('✅ dispositions[0]', dispositions[0]);
+        setDisposition(dispositions[0]);
+      }
+
       Actions.invokeAction('SetComponentState', {
         name: 'AgentTaskCanvasTabs',
         state: { selectedTabName: 'disposition' },
