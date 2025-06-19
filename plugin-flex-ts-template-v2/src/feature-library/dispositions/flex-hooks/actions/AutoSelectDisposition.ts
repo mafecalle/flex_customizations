@@ -20,7 +20,7 @@ export const actionHook = function autoSelectDispositionOnWrapupTimeout(flex: ty
         const queueName = task.queueName;
         const taskSid = task.taskSid;
 
-        // Solo proceder si la task está en wrapup (auto-complete por timeout)
+        // Solo proceder si la task está en wrapup
         if (!Flex.TaskHelper.isInWrapupMode(task)) {
             return;
         }
@@ -34,13 +34,26 @@ export const actionHook = function autoSelectDispositionOnWrapupTimeout(flex: ty
             return;
         }
 
-        // Obtener disposiciones disponibles para esta cola
-        const dispositions = getDispositionsForQueue(queueSid, queueName);
+        // CLAVE: Detectar si es auto-complete por timeout vs manual por agente
+        // Calcular tiempo transcurrido desde que entró en wrapup
+        const wrapupStartTime = task.dateUpdated.getTime();
+        const currentTime = new Date().getTime();
+        const timeInWrapup = currentTime - wrapupStartTime;
 
-        if (dispositions.length > 0) {
-            // Auto-seleccionar la primera disposición
-            console.log('🤖 Auto-seleccionando disposición por timeout de wrapup:', dispositions[0]);
-            manager.store.dispatch(updateDisposition({ taskSid, value: dispositions[0] }));
+        // Si han pasado más de 115 segundos (cerca de los 120s de timeout), 
+        // asumir que es auto-complete por timeout del sistema
+        const WRAPUP_TIMEOUT_THRESHOLD = 115000; // 115 segundos
+
+        if (timeInWrapup >= WRAPUP_TIMEOUT_THRESHOLD) {
+            // Es auto-complete por timeout → Auto-seleccionar disposición
+            const dispositions = getDispositionsForQueue(queueSid, queueName);
+
+            if (dispositions.length > 0) {
+                console.log('🤖 Auto-seleccionando disposición por timeout de wrapup:', dispositions[0]);
+                manager.store.dispatch(updateDisposition({ taskSid, value: dispositions[0] }));
+            }
         }
+        // Si timeInWrapup < 115s → Es complete manual → No hacer nada
+        // Dejar que el hook de validación existente (CompleteTask.ts) lo bloquee
     });
-}; 
+};
