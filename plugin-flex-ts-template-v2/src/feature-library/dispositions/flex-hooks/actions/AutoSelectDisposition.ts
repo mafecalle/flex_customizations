@@ -5,6 +5,7 @@ import AppState from '../../../../types/manager/AppState';
 import { reduxNamespace } from '../../../../utils/state';
 import { DispositionsState, updateDisposition } from '../states';
 import { FlexActionEvent, FlexAction } from '../../../../types/feature-loader';
+import { getMatchingTaskConfiguration } from '../../../agent-automation/config';
 
 export const actionEvent = FlexActionEvent.before;
 export const actionName = FlexAction.CompleteTask;
@@ -34,26 +35,30 @@ export const actionHook = function autoSelectDispositionOnWrapupTimeout(flex: ty
             return;
         }
 
+        // Obtener configuración de wrapup tiempo desde agent-automation
+        const taskConfig = getMatchingTaskConfiguration(task);
+        const wrapupTimeMs = taskConfig?.wrapup_time || 120000; // Default 2 minutos si no hay config
+
         // CLAVE: Detectar si es auto-complete por timeout vs manual por agente
         // Calcular tiempo transcurrido desde que entró en wrapup
         const wrapupStartTime = task.dateUpdated.getTime();
         const currentTime = new Date().getTime();
         const timeInWrapup = currentTime - wrapupStartTime;
 
-        // Si han pasado más de 115 segundos (cerca de los 120s de timeout), 
-        // asumir que es auto-complete por timeout del sistema
-        const WRAPUP_TIMEOUT_THRESHOLD = 115000; // 115 segundos
+        // Usar tiempo real configurado menos 5 segundos como threshold
+        const THRESHOLD_BUFFER = 5000; // 5 segundos
+        const WRAPUP_TIMEOUT_THRESHOLD = wrapupTimeMs - THRESHOLD_BUFFER;
 
         if (timeInWrapup >= WRAPUP_TIMEOUT_THRESHOLD) {
             // Es auto-complete por timeout → Auto-seleccionar disposición
             const dispositions = getDispositionsForQueue(queueSid, queueName);
 
             if (dispositions.length > 0) {
-                console.log('🤖 Auto-seleccionando disposición por timeout de wrapup:', dispositions[0]);
+                console.log(`🤖 Auto-seleccionando disposición por timeout de wrapup (${wrapupTimeMs}ms - ${THRESHOLD_BUFFER}ms = ${WRAPUP_TIMEOUT_THRESHOLD}ms):`, dispositions[0]);
                 manager.store.dispatch(updateDisposition({ taskSid, value: dispositions[0] }));
             }
         }
-        // Si timeInWrapup < 115s → Es complete manual → No hacer nada
+        // Si timeInWrapup < threshold → Es complete manual → No hacer nada
         // Dejar que el hook de validación existente (CompleteTask.ts) lo bloquee
     });
 };
