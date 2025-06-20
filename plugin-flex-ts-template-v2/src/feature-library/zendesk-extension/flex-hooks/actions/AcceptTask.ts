@@ -2,7 +2,7 @@ import * as Flex from '@twilio/flex-ui';
 
 import { FlexActionEvent, FlexAction } from '../../../../types/feature-loader';
 import logger from '../../../../utils/logger';
-import  ZendeskUtil from '../../utils/ZendeskUtil';
+import { updateZendeskTicketAssignee, updateFlexTaskAttributesWithTicket } from '../../utils/ZendeskService';
 
 export const actionEvent = FlexActionEvent.after;
 export const actionName = FlexAction.AcceptTask;
@@ -13,11 +13,9 @@ export const actionHook = function setAssigneeAfterAcceptTask(flex: typeof Flex)
     let task = payload.task;
 
     if (!task) {
-      await ZendeskUtil.setAssignee(2000);
+      updateZendeskTicketAssignee();
+      updateFlexTaskAttributesWithTicket(payload.task);
     }
-   
-    logger.debug(
-      `[zendesk-extension] Zendesk Assignee for ${task.sid}: ${payload.conferenceOptions.conferenceRecord}`,
-    );
+
   });
 };

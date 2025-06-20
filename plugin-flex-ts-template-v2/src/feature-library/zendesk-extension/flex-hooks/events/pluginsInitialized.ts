@@ -1,13 +1,40 @@
-import * as Flex from '@twilio/flex-ui';
-import merge from 'lodash/merge';
-import  ZendeskUtil from '../../utils/ZendeskUtil';
+import {initZendeskClient} from '../../utils/ZendeskUtil';
 import { FlexEvent } from '../../../../types/feature-loader';
+import { setSelectedTicket, setZendeskUser,clearSelectedTicket } from '../../utils/ZendeskState';
 
 export const eventName = FlexEvent.pluginsInitialized;
-export const eventHook = async function initZendeskClient(flex: typeof Flex, manager: Flex.Manager) {
+export const eventHook = async function useInitializeZendeskClient () {
 
+    console.log('[Zendesk] Initializing Zendesk client...');
 
-     await ZendeskUtil.initClient();
-     await ZendeskUtil.setupZendeskClientHandlers();
+    const client = await initZendeskClient();
+    if (!client) return;
 
+    console.log('[Zendesk] Client initialized.');
+
+    try {
+      const data = await client.get('currentUser');
+      setZendeskUser(data);
+      console.log('[Zendesk] Current user:', data?.currentUser?.email);
+    } catch (err) {
+      console.error('[Zendesk] Failed to fetch currentUser:', err);
+    }
+
+    if (!client._flexListenersBound) {
+      client.on('ticket.activated', (context: any) => {
+        console.log('[Zendesk] ticket.activated:', context);
+        setSelectedTicket(context);
+      });
+
+      client.on('ticket.deactivated', () => {
+        console.log('[Zendesk] ticket.deactivated');
+        clearSelectedTicket();
+      });
+
+      client.on('app.registered', () => {
+        console.log('[Zendesk] app.registered');
+      });
+
+      client._flexListenersBound = true;
+    }
 }
