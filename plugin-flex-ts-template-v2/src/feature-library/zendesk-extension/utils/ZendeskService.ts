@@ -8,6 +8,10 @@ export const updateZendeskTicketAssignee = async (retries = 3, delay = 4000): Pr
     const selectedTicket = getSelectedTicket();
     const zendeskUser = getZendeskUser();
 
+    console.log('[zendesk-extension] - updateZendeskTicketAssignee() selectedTicket:', selectedTicket);
+    console.log('[zendesk-extension] - updateZendeskTicketAssignee() zendeskUser:', zendeskUser);
+    console.log('[zendesk-extension] - updateZendeskTicketAssignee() zdClient:', zdClient);
+
     if (zdClient && selectedTicket?.ticketId && zendeskUser?.currentUser?.email) {
       try {
         await zdClient.request({

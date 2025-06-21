@@ -17,6 +17,7 @@ export const actionHook = function setAssigneeAfterAcceptTask(flex: typeof Flex)
 
     if (task) {
     logger.info('[zendesk-extension] about to updateAssignee');
+     await new Promise(resolve => setTimeout(resolve, 2000));
      await updateZendeskTicketAssignee();
      await updateFlexTaskAttributesWithTicket(payload.task);
     }
