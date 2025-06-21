@@ -30,11 +30,11 @@ export const initZendeskClient = async (retries = 5, delay = 5000): Promise<any>
     }
 
     if (remainingRetries <= 0) {
-      console.warn('ZAFClient is not available after multiple attempts.');
+      console.warn('[zendesk-extension] ZAFClient is not available after multiple attempts.');
       return null;
     }
 
-    console.log(`ZAFClient not available, retrying in ${delay}ms... (${remainingRetries} attempts left)`);
+    console.log(`[zendesk-extension] ZAFClient not available, retrying in ${delay}ms... (${remainingRetries} attempts left)`);
 
     return new Promise(resolve => {
       setTimeout(() => resolve(tryInit(remainingRetries - 1)), delay);

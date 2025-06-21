@@ -5,34 +5,34 @@ import { setSelectedTicket, setZendeskUser,clearSelectedTicket } from '../../uti
 export const eventName = FlexEvent.pluginsInitialized;
 export const eventHook = async function useInitializeZendeskClient () {
 
-    console.log('[Zendesk] Initializing Zendesk client...');
+    console.log('[zendesk-extension] Initializing Zendesk client...');
 
     const client = await initZendeskClient();
     if (!client) return;
 
-    console.log('[Zendesk] Client initialized.');
+    console.log('[zendesk-extension] Client initialized.');
 
     try {
       const data = await client.get('currentUser');
       setZendeskUser(data);
-      console.log('[Zendesk] Current user:', data?.currentUser?.email);
+      console.log('[zendesk-extension] Current user:', data?.currentUser?.email);
     } catch (err) {
-      console.error('[Zendesk] Failed to fetch currentUser:', err);
+      console.error('[zendesk-extension] Failed to fetch currentUser:', err);
     }
 
     if (!client._flexListenersBound) {
       client.on('ticket.activated', (context: any) => {
-        console.log('[Zendesk] ticket.activated:', context);
+        console.log('[zendesk-extension] ticket.activated:', context);
         setSelectedTicket(context);
       });
 
       client.on('ticket.deactivated', () => {
-        console.log('[Zendesk] ticket.deactivated');
+        console.log('[zendesk-extension] ticket.deactivated');
         clearSelectedTicket();
       });
 
       client.on('app.registered', () => {
-        console.log('[Zendesk] app.registered');
+        console.log('[zendesk-extension] app.registered');
       });
 
       client._flexListenersBound = true;
