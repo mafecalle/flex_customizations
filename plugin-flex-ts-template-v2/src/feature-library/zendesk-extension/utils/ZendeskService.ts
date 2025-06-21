@@ -2,7 +2,7 @@ import { getZendeskClient } from './ZendeskUtil';
 import { getSelectedTicket, getZendeskUser } from './ZendeskState';
 import { ITask } from '@twilio/flex-ui';
 
-export const updateZendeskTicketAssignee = async (retries = 3, delay = 2000): Promise<void> => {
+export const updateZendeskTicketAssignee = async (retries = 3, delay = 4000): Promise<void> => {
   for (let attempt = 0; attempt < retries; attempt++) {
     const zdClient = getZendeskClient();
     const selectedTicket = getSelectedTicket();
@@ -25,15 +25,15 @@ export const updateZendeskTicketAssignee = async (retries = 3, delay = 2000): Pr
     }
 
     if (attempt < retries - 1) {
-      console.warn(`[zendesk-extension] Missing data, retrying in ${delay}ms... (${retries - attempt - 1} attempts left)`);
+      console.warn(`[zendesk-extension] - updateZendeskTicketAssignee() Missing data, retrying in ${delay}ms... (${retries - attempt - 1} attempts left)`);
       await new Promise(resolve => setTimeout(resolve, delay));
     }
   }
   
-  console.warn('[zendesk-extension] Failed to update ticket after all retries - missing data.');
+  console.warn('[zendesk-extension] - updateZendeskTicketAssignee() Failed to update ticket after all retries - missing data.');
 };
 
-export const updateFlexTaskAttributesWithTicket = async (task: ITask, retries = 3, delay = 2000): Promise<void> => {
+export const updateFlexTaskAttributesWithTicket = async (task: ITask, retries = 3, delay = 4000): Promise<void> => {
   for (let attempt = 0; attempt < retries; attempt++) {
     const selectedTicket = getSelectedTicket();
 
@@ -53,10 +53,10 @@ export const updateFlexTaskAttributesWithTicket = async (task: ITask, retries = 
     }
 
     if (attempt < retries - 1) {
-      console.warn(`[zendesk-extension] No selected ticket, retrying in ${delay}ms... (${retries - attempt - 1} attempts left)`);
+      console.warn(`[zendesk-extension] - updateFlexTaskAttributesWithTicket() No selected ticket, retrying in ${delay}ms... (${retries - attempt - 1} attempts left)`);
       await new Promise(resolve => setTimeout(resolve, delay));
     }
   }
   
-  console.warn('[zendesk-extension] Failed to update task after all retries - no selected ticket.');
+  console.warn('[zendesk-extension]- updateFlexTaskAttributesWithTicket() Failed to update task after all retries - no selected ticket.');
 };
