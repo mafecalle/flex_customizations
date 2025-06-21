@@ -7,6 +7,10 @@ export const updateZendeskTicketAssignee = async (): Promise<void> => {
   const selectedTicket = getSelectedTicket();
   const zendeskUser = getZendeskUser();
 
+  console.log('[Zendesk] Updating ticket assignee:', selectedTicket, zendeskUser);
+  console.log('[Zendesk] Zendesk client:', zdClient);
+  console.log('[Zendesk] Selected ticket:', selectedTicket);
+
   if (!zdClient || !selectedTicket?.ticketId || !zendeskUser?.currentUser?.email) {
     console.warn('[Zendesk] Missing data for ticket update.');
     return;

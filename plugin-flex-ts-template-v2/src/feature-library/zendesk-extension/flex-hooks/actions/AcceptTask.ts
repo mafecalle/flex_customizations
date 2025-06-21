@@ -8,13 +8,17 @@ export const actionEvent = FlexActionEvent.after;
 export const actionName = FlexAction.AcceptTask;
 export const actionHook = function setAssigneeAfterAcceptTask(flex: typeof Flex) {
   flex.Actions.addListener(`${actionEvent}${actionName}`, async (payload) => {
+
+    logger.info('[zendesk-extension] entered to acceptAction');
+
     if (!payload.task && !payload.sid) return;
 
     let task = payload.task;
 
     if (!task) {
-      updateZendeskTicketAssignee();
-      updateFlexTaskAttributesWithTicket(payload.task);
+    logger.info('[zendesk-extension] about to updateAssignee');
+     await updateZendeskTicketAssignee();
+     await updateFlexTaskAttributesWithTicket(payload.task);
     }
 
   });
