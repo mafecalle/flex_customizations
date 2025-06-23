@@ -1,6 +1,8 @@
 import { getZendeskClient } from './ZendeskUtil';
 import { getSelectedTicket, getZendeskUser } from './ZendeskState';
 import { ITask } from '@twilio/flex-ui';
+import TaskRouterService from '../../../utils/serverless/TaskRouter/TaskRouterService';
+
 
 export const updateZendeskTicketAssignee = async (retries = 3, delay = 4000): Promise<void> => {
   for (let attempt = 0; attempt < retries; attempt++) {
@@ -44,12 +46,12 @@ export const updateFlexTaskAttributesWithTicket = async (task: ITask, retries = 
     if (selectedTicket?.ticketId) {
       try {
         const attributes = {
-          ...task.attributes,
           zd_ticket_id: selectedTicket.ticketId,
         };
-        await task.setAttributes(attributes);
-        console.log('[zendesk-extension] Task updated with ticket ID.');
-        return;
+
+        const response = await TaskRouterService.updateTaskAttributes(task.sid, attributes,false);
+        console.log(`[zendesk-extension] Set ticketId:${selectedTicket?.ticketId} attribute for taskId: ${task.sid}, response:`, response);
+
       } catch (error) {
         console.error('[zendesk-extension] Failed to update task attributes:', error);
         throw error;
@@ -63,4 +65,22 @@ export const updateFlexTaskAttributesWithTicket = async (task: ITask, retries = 
   }
   
   console.warn('[zendesk-extension]- updateFlexTaskAttributesWithTicket() Failed to update task after all retries - no selected ticket.');
+};
+
+export const updateFlexTaskAttributesWithWarmTransfer = async (
+  taskSid: string,
+  attributeKey: string,
+  value: boolean,
+) => {
+
+    const attributes = {
+      attributeKey: value,
+    };
+
+  try {
+    const response = await TaskRouterService.updateTaskAttributes(taskSid, attributes,false);
+    console.log(`Set ${attributeKey} attribute for ${taskSid} to ${value} , response:`, response);
+  } catch (error) {
+    console.error(`Failed to set ${attributeKey} attribute for ${taskSid} to ${value}` , error);
+  }
 };

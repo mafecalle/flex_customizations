@@ -15,12 +15,13 @@ export const actionHook = function setAssigneeAfterAcceptTask(flex: typeof Flex)
 
     let task = payload.task;
 
-    if (task) {
+    if (task && (task.attributes.warm_transfer == null || task.attributes.warm_transfer === false)) {
     logger.info('[zendesk-extension] about to updateAssignee');
      await new Promise(resolve => setTimeout(resolve, 2000));
      await updateZendeskTicketAssignee();
-     await updateFlexTaskAttributesWithTicket(payload.task);
     }
+
+    await updateFlexTaskAttributesWithTicket(payload.task);
 
   });
 };
