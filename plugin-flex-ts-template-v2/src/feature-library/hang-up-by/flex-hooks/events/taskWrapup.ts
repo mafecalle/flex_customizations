@@ -22,11 +22,6 @@ export const eventHook = async (_flex: typeof Flex, _manager: Flex.Manager, task
   ) {
     currentHangUpBy = HangUpBy.Consult;
     HangUpByHelper.setHangUpBy(task.sid, currentHangUpBy);
-
-    //[CNX] added invokeAction to updateZendeskAssignee
-    // await _flex.Actions.invokeAction('UpdateTaskAttributes');
-    logger.debug(`[hang-up-by] consult-transfer completed for task: ${task.taskSid}`);
-
   }
 
   if (!currentHangUpBy) {

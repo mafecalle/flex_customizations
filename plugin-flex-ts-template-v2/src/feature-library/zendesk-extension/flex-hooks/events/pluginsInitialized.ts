@@ -2,14 +2,11 @@ import {initZendeskClient} from '../../utils/ZendeskUtil';
 import { isFeatureEnabled } from '../../config';
 import { FlexEvent } from '../../../../types/feature-loader';
 import { setSelectedTicket, setZendeskUser,clearSelectedTicket } from '../../utils/ZendeskState';
-import { registerUpdateZendeskTicketAssigneeAction } from '../custom-action/UpdateZendeskTicketAssignee';
 
 export const eventName = FlexEvent.pluginsInitialized;
 export const eventHook = async function useInitializeZendeskClient () {
 
    if (!isFeatureEnabled()) return;
-
-    registerUpdateZendeskTicketAssigneeAction();
 
     console.log('[zendesk-extension] Initializing Zendesk client...');
 

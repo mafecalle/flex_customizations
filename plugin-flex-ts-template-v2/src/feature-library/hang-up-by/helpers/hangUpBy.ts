@@ -193,6 +193,21 @@ export const setHangUpByAttribute = async (
   logger.debug(`[hang-up-by] Set hang_up_by attribute for ${taskSid} to ${value}`, newAttributes);
 };
 
+export const setZendeskAssigneAttribute = async (
+  taskSid: string,
+  attributeKey: string,
+  value: boolean,
+): Promise<void> => {
+  const newAttributes = { [attributeKey]: value };
+
+  try {
+    const response = await TaskRouterService.updateTaskAttributes(taskSid, newAttributes);
+    console.log(`Set ${attributeKey} attribute for ${taskSid} to ${value}, response:`, response);
+  } catch (error) {
+    console.error(`Failed to set ${attributeKey} attribute for ${taskSid} to ${value}`, error);
+  }
+};
+
 export const clearHangUpBy = (reservationSid: string) => {
   const storage = getHangUpBy();
 
