@@ -45,13 +45,9 @@ export const updateFlexTaskAttributesWithTicket = async (task: ITask, retries = 
 
     if (selectedTicket?.ticketId) {
       try {
-        const attributes = {
-          zd_ticket_id: selectedTicket.ticketId,
-        };
-
-        const response = await TaskRouterService.updateTaskAttributes(task.taskSid, attributes,false);
-        console.log(`[zendesk-extension] Set ticketId:${selectedTicket?.ticketId} attribute for taskId: ${task.sid}, response:`, response);
-
+        await TaskRouterService.updateTaskAttributes(task.taskSid, { zd_ticket_id: selectedTicket.ticketId }, false);
+        console.log(`[zendesk-extension] Set ticketId:${selectedTicket.ticketId} for taskId: ${task.sid}`);
+        return;
       } catch (error) {
         console.error('[zendesk-extension] Failed to update task attributes:', error);
         throw error;
@@ -59,30 +55,25 @@ export const updateFlexTaskAttributesWithTicket = async (task: ITask, retries = 
     }
 
     if (attempt < retries - 1) {
-      console.warn(`[zendesk-extension] - updateFlexTaskAttributesWithTicket() No selected ticket, retrying in ${delay}ms... (${retries - attempt - 1} attempts left)`);
+      console.warn(`[zendesk-extension] No selected ticket, retrying in ${delay}ms... (${retries - attempt - 1} attempts left)`);
       await new Promise(resolve => setTimeout(resolve, delay));
     }
   }
   
-  console.warn('[zendesk-extension]- updateFlexTaskAttributesWithTicket() Failed to update task after all retries - no selected ticket.');
+  console.warn('[zendesk-extension] Failed to update task after all retries - no selected ticket.');
 };
 
 export const updateFlexTaskAttributesWithWarmTransfer = async (
   taskSid: string,
   attributeKey: string,
   value: boolean,
-) => {
-
-    const newAttributes = {
-    conversations: {
-      [attributeKey]: value,
-    },
-  };
+): Promise<void> => {
+  const newAttributes = { [attributeKey]: value };
 
   try {
-    const response = await TaskRouterService.updateTaskAttributes(taskSid, newAttributes,false);
-    console.log(`Set ${attributeKey} attribute for ${taskSid} to ${value} , response:`, response);
+    const response = await TaskRouterService.updateTaskAttributes(taskSid, newAttributes, false);
+    console.log(`Set ${attributeKey} attribute for ${taskSid} to ${value}, response:`, response);
   } catch (error) {
-    console.error(`Failed to set ${attributeKey} attribute for ${taskSid} to ${value}` , error);
+    console.error(`Failed to set ${attributeKey} attribute for ${taskSid} to ${value}`, error);
   }
 };

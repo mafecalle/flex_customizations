@@ -14,10 +14,14 @@ export const actionHook = function reportHangUpByTransferTask(flex: typeof Flex,
 
     const {  taskSid} = payload.task;
 
-
-    //[CNX] added validation for transfer mode
     console.log('[zendesk-extension] - Transfer mode:', payload.options.mode);
-    updateFlexTaskAttributesWithWarmTransfer(taskSid,"warm_transfer",true)
+
+    if(payload.options.mode === 'WARM')
+    {
+      
+      await updateFlexTaskAttributesWithWarmTransfer(taskSid,"warm_transfer",true);
+    }
+    
 
     
   });
