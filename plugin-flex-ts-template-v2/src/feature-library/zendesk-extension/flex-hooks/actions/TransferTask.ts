@@ -19,7 +19,7 @@ export const actionHook = function reportHangUpByTransferTask(flex: typeof Flex,
     if(payload.options.mode === 'WARM')
     {
       
-      await updateFlexTaskAttributesWithWarmTransfer(taskSid,"warm_transfer",true);
+      await updateFlexTaskAttributesWithWarmTransfer(taskSid,"warm_transfer","initialized");
     }
     
 

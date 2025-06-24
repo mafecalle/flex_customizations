@@ -45,7 +45,7 @@ export const updateFlexTaskAttributesWithTicket = async (task: ITask, retries = 
 
     if (selectedTicket?.ticketId) {
       try {
-        await TaskRouterService.updateTaskAttributes(task.taskSid, { zd_ticket_id: selectedTicket.ticketId }, false);
+        await TaskRouterService.updateTaskAttributes(task.taskSid, { zd_ticket_id: selectedTicket.ticketId });
         console.log(`[zendesk-extension] Set ticketId:${selectedTicket.ticketId} for taskId: ${task.sid}`);
         return;
       } catch (error) {
@@ -66,12 +66,12 @@ export const updateFlexTaskAttributesWithTicket = async (task: ITask, retries = 
 export const updateFlexTaskAttributesWithWarmTransfer = async (
   taskSid: string,
   attributeKey: string,
-  value: boolean,
+  value: string,
 ): Promise<void> => {
   const newAttributes = { [attributeKey]: value };
 
   try {
-    const response = await TaskRouterService.updateTaskAttributes(taskSid, newAttributes, false);
+    const response = await TaskRouterService.updateTaskAttributes(taskSid, newAttributes);
     console.log(`Set ${attributeKey} attribute for ${taskSid} to ${value}, response:`, response);
   } catch (error) {
     console.error(`Failed to set ${attributeKey} attribute for ${taskSid} to ${value}`, error);
