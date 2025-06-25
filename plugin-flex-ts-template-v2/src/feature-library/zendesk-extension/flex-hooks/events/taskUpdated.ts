@@ -10,7 +10,7 @@ export const eventHook = async function updateZendeskAssigneeAfterWarmCompletion
   manager: Flex.Manager,
   task: Flex.ITask,
 ) {
-  logger.info(`[zendesk-extension] handle ${eventName} for ${task.sid}`);
+  logger.info(`[zendesk-extension] handle ${eventName} for ${task.taskSid} with attributes:${JSON.stringify(task.attributes)}`);
 
   if (task.attributes.updateZendeskAssignee === true && task.attributes.transferType === "WARM") {
     await updateZendeskTicketAssignee(task);
