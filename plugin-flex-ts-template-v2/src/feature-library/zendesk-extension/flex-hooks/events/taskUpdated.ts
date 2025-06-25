@@ -5,8 +5,12 @@ import logger from '../../../../utils/logger';
 import { updateZendeskTicketAssignee,setZendeskAssigneAttribute } from '../../utils/ZendeskService';
 
 export const eventName = FlexEvent.taskUpdated;
-export const eventHook = async (_flex: typeof Flex, _manager: Flex.Manager, task: Flex.ITask) => {
-  logger.debug(`[zendesk-extension] handle ${eventName} for ${task.sid}`);
+export const eventHook = async function updateZendeskAssigneeAfterWarmCompletion(
+  flex: typeof Flex,
+  manager: Flex.Manager,
+  task: Flex.ITask,
+) {
+  logger.info(`[zendesk-extension] handle ${eventName} for ${task.sid}`);
 
   if (task.attributes.updateZendeskAssignee === true && task.attributes.transferType === "WARM") {
     await updateZendeskTicketAssignee(task);

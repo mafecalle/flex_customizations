@@ -89,3 +89,9 @@ export const setZendeskAssigneAttribute = async (
     console.error(`Failed to set ${attributeKey} attribute for ${taskSid} to ${value}`, error);
   }
 };
+
+export const handleTaskUpdated = () => {
+
+  console.log('Warm transfer completed detected in task attributes');
+
+};
