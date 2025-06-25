@@ -193,18 +193,18 @@ export const setHangUpByAttribute = async (
   logger.debug(`[hang-up-by] Set hang_up_by attribute for ${taskSid} to ${value}`, newAttributes);
 };
 
-export const setZendeskAssigneAttribute = async (
+export const setZendeskAttributes = async (
   taskSid: string,
-  attributeKey: string,
-  value: boolean,
+  transferType: string,
+  zendeskAssignee: boolean,
 ): Promise<void> => {
-  const newAttributes = { [attributeKey]: value };
+  const newAttributes = { "transferType": transferType, "updateZendeskAssignee":zendeskAssignee};
 
   try {
     const response = await TaskRouterService.updateTaskAttributes(taskSid, newAttributes);
-    console.log(`Set ${attributeKey} attribute for ${taskSid} to ${value}, response:`, response);
+    console.log(`Set ${JSON.stringify(newAttributes)} attributes for ${taskSid}, response:`, response);
   } catch (error) {
-    console.error(`Failed to set ${attributeKey} attribute for ${taskSid} to ${value}`, error);
+    console.error(`Failed to set ${JSON.stringify(newAttributes)} attributes for ${taskSid}`, error);
   }
 };
 

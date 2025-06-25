@@ -8,8 +8,8 @@ export const eventName = FlexEvent.taskUpdated;
 export const eventHook = async (_flex: typeof Flex, _manager: Flex.Manager, task: Flex.ITask) => {
   logger.debug(`[zendesk-extension] handle ${eventName} for ${task.sid}`);
 
-  if (task.attributes.zendeskAssigne === false) {
+  if (task.attributes.updateZendeskAssignee === true && task.attributes.transferType === "WARM") {
     await updateZendeskTicketAssignee(task);
-    await setZendeskAssigneAttribute(task.taskSid, 'zendeskAssigne', true);
+    await setZendeskAssigneAttribute(task.taskSid, 'updateZendeskAssignee', false);
   }
 };

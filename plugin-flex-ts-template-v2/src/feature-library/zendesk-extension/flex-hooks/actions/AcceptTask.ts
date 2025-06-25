@@ -1,7 +1,7 @@
 import * as Flex from '@twilio/flex-ui';
 import { FlexActionEvent, FlexAction } from '../../../../types/feature-loader';
 import logger from '../../../../utils/logger';
-import { updateZendeskTicketAssignee, setZdTicketIdAttribute } from '../../utils/ZendeskService';
+import { updateZendeskTicketAssignee, setZdTicketIdAttribute,setZendeskAssigneAttribute } from '../../utils/ZendeskService';
 
 export const actionEvent = FlexActionEvent.after;
 export const actionName = FlexAction.AcceptTask;
@@ -14,10 +14,10 @@ export const actionHook = function setAssigneeAfterAcceptTask(flex: typeof Flex)
 
     await new Promise(resolve => setTimeout(resolve, 2000));
     
-    if (!payload.task.incomingTransferObject) {
+    if (!payload.task.incomingTransferObject || (payload.task.incomingTransferObject && payload.task.attributes.updateZendeskAssignee === true)) {
       await updateZendeskTicketAssignee(payload.task);
-    }
-    
+      await setZendeskAssigneAttribute(payload.task.taskSid, 'updateZendeskAssignee', false);
+    } 
     await setZdTicketIdAttribute(payload.task);
   });
 };

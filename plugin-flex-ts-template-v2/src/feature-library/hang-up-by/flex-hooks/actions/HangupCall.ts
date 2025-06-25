@@ -31,8 +31,8 @@ export const actionHook = function reportHangUpByHangupCall(flex: typeof Flex, _
       // Let's say AgentB hung up or didn't answer, but then we hang up--change it to Agent in this case.
       if (task.outgoingTransferObject && HangUpByHelper.hasAnotherWorkerJoined(task)) {
 
-      //[CNX] added a property to taskAttributes to notify that the AgentA left the conference, and assigne the Zendesk ticket to the AgentB
-        HangUpByHelper.setZendeskAssigneAttribute(task.taskSid,"zendeskAssigne",false)
+      //[CNX] added a property to taskAttributes to notify that the AgentA left the conference, and assigne the Zendesk ticket to the AgentB     
+      HangUpByHelper.setZendeskAttributes(task.taskSid,"WARM",true)
         return;
       }
     } else if (task.incomingTransferObject && HangUpByHelper.hasAnotherWorkerJoined(task)) {
