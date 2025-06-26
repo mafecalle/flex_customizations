@@ -2,6 +2,7 @@ import * as Flex from '@twilio/flex-ui';
 import { FlexActionEvent, FlexAction } from '../../../../types/feature-loader';
 import {setZendeskAssigneAttribute} from '../../helpers/ZendeskExtensionHelper';
 import { SyncDoc } from '../../utils/sync/Sync';
+import logger from 'utils/logger';
 export const actionEvent = FlexActionEvent.before;
 export const actionName = FlexAction.TransferTask;
 export const actionHook = function reportHangUpByTransferTask(flex: typeof Flex, _manager: Flex.Manager) {
@@ -9,9 +10,7 @@ export const actionHook = function reportHangUpByTransferTask(flex: typeof Flex,
 
     await setZendeskAssigneAttribute(payload.task.taskSid, payload.options.mode, true);
 
-    const updatedTask = Flex.TaskHelper.getTaskByTaskSid(payload.task.taskSid);
-
-    payload.task.workerSid
+    logger.info("workerSid:",payload.task.workerSid);
 
     if(payload?.options?.mode === 'WARM')
     {
