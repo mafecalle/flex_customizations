@@ -24,15 +24,6 @@ export const eventHook = async (_flex: typeof Flex, _manager: Flex.Manager, task
     HangUpByHelper.setHangUpBy(task.sid, currentHangUpBy);
   }
 
-  //CNX Added logic
-  if (
-    task.outgoingTransferObject &&
-    HangUpByHelper.hasAnotherWorkerJoined(task)
-  ) {
-    logger.info(`[zendesk-extension] set updateZendeskAssignee to true, due to warm transfer complete`);
-    HangUpByHelper.setZendeskAttributes(task.taskSid,"WARM",true);
-  }
-
   if (!currentHangUpBy) {
     // If this worker hung up, this would have been set in beforeHangupCall or beforeKickParticipant
     // Therefore, must be customer hangup

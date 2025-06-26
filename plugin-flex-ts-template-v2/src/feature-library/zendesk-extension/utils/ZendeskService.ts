@@ -80,7 +80,12 @@ export const setZendeskAssigneAttribute = async (
   attributeKey: string,
   value: boolean,
 ): Promise<void> => {
-  const newAttributes = { [attributeKey]: value };
+  
+  const newAttributes = {
+    zendesk: {
+      [attributeKey]: value
+    },
+  };
 
   try {
     const response = await TaskRouterService.updateTaskAttributes(taskSid, newAttributes);

@@ -195,10 +195,16 @@ export const setHangUpByAttribute = async (
 
 export const setZendeskAttributes = async (
   taskSid: string,
-  transferType: string,
-  zendeskAssignee: boolean,
+  _transferType: string,
+  _zendeskAssignee: boolean
 ): Promise<void> => {
-  const newAttributes = { "transferType": transferType, "updateZendeskAssignee":zendeskAssignee};
+
+    const newAttributes = {
+    zendesk: {
+      transferType: _transferType,
+      updateAssignee: _zendeskAssignee
+    },
+  };
 
   try {
     const response = await TaskRouterService.updateTaskAttributes(taskSid, newAttributes);

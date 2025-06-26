@@ -14,12 +14,9 @@ export const actionHook = function setAssigneeAfterAcceptTask(flex: typeof Flex)
 
     await new Promise(resolve => setTimeout(resolve, 2000));
     
-    if (!payload.task.incomingTransferObject || (payload.task.incomingTransferObject && payload.task.attributes.updateZendeskAssignee === true)) {
+    if (!payload.task.incomingTransferObject || (payload.task.incomingTransferObject && payload.task.attributes.zendesk.transferType === "COLD")) {
       await updateZendeskTicketAssignee(payload.task);
-      await setZendeskAssigneAttribute(payload.task.taskSid, 'updateZendeskAssignee', false);
-    } else {
-      // Listen for task updates
-    flex.Manager.getInstance().events.addListener('taskUpdated', handleTaskUpdated);
+      await setZendeskAssigneAttribute(payload.task.taskSid, 'updateAssignee', false);
     }
 
     await setZdTicketIdAttribute(payload.task);

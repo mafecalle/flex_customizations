@@ -13,8 +13,9 @@ export const actionHook = function reportHangUpByTransferTask(flex: typeof Flex,
       payload.options.mode === 'COLD' ? HangUpBy.ColdTransfer : HangUpBy.WarmTransfer,
     );
 
+
     //[CNX] added 2 properties to taskAttributes to notify transferType and assignee flag
-    HangUpByHelper.setZendeskAttributes(payload.task.taskSid, payload.options.mode, payload.options.mode === 'COLD' ? true : false);
+    HangUpByHelper.setZendeskAttributes(payload.task.taskSid, payload.options.mode, true);
     
   });
 };
