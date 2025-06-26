@@ -2,6 +2,7 @@ import * as Flex from '@twilio/flex-ui';
 import { FlexActionEvent, FlexAction } from '../../../../types/feature-loader';
 import logger from '../../../../utils/logger';
 import { updateZendeskTicketAssignee, setZdTicketIdAttribute,setZendeskAssigneAttribute,handleTaskUpdated } from '../../utils/ZendeskService';
+import { SyncDoc } from '../../utils/sync/Sync';
 
 export const actionEvent = FlexActionEvent.after;
 export const actionName = FlexAction.AcceptTask;
@@ -17,6 +18,15 @@ export const actionHook = function setAssigneeAfterAcceptTask(flex: typeof Flex)
     if (!payload.task.incomingTransferObject || (payload.task.incomingTransferObject && payload.task.attributes.zendesk.transferType === "COLD")) {
       await updateZendeskTicketAssignee(payload.task);
       await setZendeskAssigneAttribute(payload.task.taskSid, 'updateAssignee', false);
+    }
+    else
+    {
+      const syncDocName = `warm-transfer-${payload.task.taskSid}`;
+
+      //add logic to listen updates from sync document waiting for agentA leave
+      await SyncDoc.subscribeToWarmTransferDoc(syncDocName, () => {
+        logger.info('Agent A has left the conference.');
+      });
     }
 
     await setZdTicketIdAttribute(payload.task);
