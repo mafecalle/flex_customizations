@@ -3,28 +3,30 @@ import logger from '../../../../utils/logger';
 
 class SyncDocClass {
 
-    createWarmTransferDocIfNotExists = async (docName: string) => {
+    createWarmTransferDocIfNotExists = async (docName: string,workerSid: string) => {
         try {
             let doc;
             try {
                 doc = await client.document({
                     id: docName,
                     mode: 'open_or_create',
-                    data: { agentALeft: false }
+                    ttl:600,
+                    data: { agentALeft: false, agentASid: workerSid }
             });
             } catch (err: any) {
                 if (err.status === 404) {
                     doc = await client.document({
                     id: docName,
                     mode: 'open_or_create',
-                    data: { agentALeft: false }
+                    ttl:600,
+                    data: { agentALeft: false, agentASid: workerSid }
             });
                     return;
                 }
                 throw err;
             }
             // optional: overwrite or reset data if needed
-            await doc.update({ agentALeft: false });
+            await doc.update({ agentALeft: false, agentASid: workerSid });
         } catch (error) {
             if (error instanceof Error) {
                 logger.error('[sync-util] Failed to create warm transfer doc', error);
@@ -54,18 +56,28 @@ class SyncDocClass {
         }
     };
 
-    setAgentALeftFlag = async (docName: string) => {
+
+    setAgentALeftFlag = async (docName: string, currentWorkerSid: string) => {
         try {
             const doc = await client.document(docName);
+            const { agentASid } = doc.data as any || {};
+
+            if (agentASid !== currentWorkerSid) {
+                logger.info(`[sync-util] Skipping update — current worker (${currentWorkerSid}) is not agentA (${agentASid})`);
+                return;
+            }
+
             await doc.update({ agentALeft: true });
+            logger.info(`[sync-util] agentALeft flag set for ${docName}`);
         } catch (error) {
             if (error instanceof Error) {
                 logger.error('[sync-util] Failed to update agentALeft flag', error);
             } else {
-                logger.error('[sync-util] Failed to update agentALeft flag', { message: 'Unknown error type', error });
+                logger.error('[sync-util] Unknown error type', { message: error });
             }
         }
     };
+
 
     clearSyncDocData = async (docName: string) => {
         try {

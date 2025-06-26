@@ -1,7 +1,8 @@
 import * as Flex from '@twilio/flex-ui';
 import { FlexActionEvent, FlexAction } from '../../../../types/feature-loader';
 import logger from '../../../../utils/logger';
-import { updateZendeskTicketAssignee, setZdTicketIdAttribute,setZendeskAssigneAttribute,handleTaskUpdated } from '../../utils/ZendeskService';
+import { updateZendeskTicketAssignee } from '../../utils/zendesk/ZendeskService';
+import {setZdTicketIdAttribute,setZendeskAssigneAttribute} from '../../helpers/ZendeskExtensionHelper';
 import { SyncDoc } from '../../utils/sync/Sync';
 
 export const actionEvent = FlexActionEvent.after;

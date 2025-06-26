@@ -41,7 +41,7 @@ export const eventHook = async (_flex: typeof Flex, _manager: Flex.Manager, task
     {
         const syncDocName = `warm-transfer-${task.taskSid}`;
 
-        await SyncDoc.setAgentALeftFlag(syncDocName);
+        await SyncDoc.setAgentALeftFlag(syncDocName,task.workerSid);
     }
 
 };

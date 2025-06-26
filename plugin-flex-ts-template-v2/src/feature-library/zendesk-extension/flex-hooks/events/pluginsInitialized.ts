@@ -1,7 +1,7 @@
-import {initZendeskClient} from '../../utils/ZendeskUtil';
+import {initZendeskClient} from '../../utils/zendesk/ZendeskUtil';
 import { isFeatureEnabled } from '../../config';
 import { FlexEvent } from '../../../../types/feature-loader';
-import { setSelectedTicket, setZendeskUser,clearSelectedTicket } from '../../utils/ZendeskState';
+import { setSelectedTicket, setZendeskUser,clearSelectedTicket } from '../../utils/zendesk/ZendeskState';
 
 export const eventName = FlexEvent.pluginsInitialized;
 export const eventHook = async function useInitializeZendeskClient () {
