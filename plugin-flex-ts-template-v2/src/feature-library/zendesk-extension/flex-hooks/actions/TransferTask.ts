@@ -2,7 +2,8 @@ import * as Flex from '@twilio/flex-ui';
 import { FlexActionEvent, FlexAction } from '../../../../types/feature-loader';
 import {setZendeskAssigneAttribute} from '../../helpers/ZendeskExtensionHelper';
 import { SyncDoc } from '../../utils/sync/Sync';
-import logger from 'utils/logger';
+import logger from '../../../../utils/logger';
+
 export const actionEvent = FlexActionEvent.before;
 export const actionName = FlexAction.TransferTask;
 export const actionHook = function reportHangUpByTransferTask(flex: typeof Flex, _manager: Flex.Manager) {
