@@ -14,7 +14,9 @@ export const setZdTicketIdAttribute = async (task: ITask, retries = 3, delay = 4
         return;
       } catch (error) {
         console.error('[zendesk-extension] Failed to update task attributes:', error);
-        throw error;
+        if (attempt === retries - 1) {
+          throw error;
+        }
       }
     }
 

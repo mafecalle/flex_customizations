@@ -15,10 +15,7 @@ export const actionHook = function reportHangUpByTransferTask(flex: typeof Flex,
 
     if(payload?.options?.mode === 'WARM')
     {
-        //create sync document 
         const syncDocName = `warm-transfer-${payload.task.taskSid}`;
-
-        // Call this when warm transfer is initiated
         await SyncDoc.createWarmTransferDocIfNotExists(syncDocName,payload.task.workerSid);
     } 
   });

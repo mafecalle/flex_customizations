@@ -193,27 +193,6 @@ export const setHangUpByAttribute = async (
   logger.debug(`[hang-up-by] Set hang_up_by attribute for ${taskSid} to ${value}`, newAttributes);
 };
 
-export const setZendeskAttributes = async (
-  taskSid: string,
-  _transferType: string,
-  _zendeskAssignee: boolean
-): Promise<void> => {
-
-    const newAttributes = {
-    zendesk: {
-      transferType: _transferType,
-      updateAssignee: _zendeskAssignee
-    },
-  };
-
-  try {
-    const response = await TaskRouterService.updateTaskAttributes(taskSid, newAttributes);
-    console.log(`Set ${JSON.stringify(newAttributes)} attributes for ${taskSid}, response:`, response);
-  } catch (error) {
-    console.error(`Failed to set ${JSON.stringify(newAttributes)} attributes for ${taskSid}`, error);
-  }
-};
-
 export const clearHangUpBy = (reservationSid: string) => {
   const storage = getHangUpBy();
 

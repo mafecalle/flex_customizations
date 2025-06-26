@@ -10,7 +10,7 @@ class SyncDocClass {
                 doc = await client.document({
                     id: docName,
                     mode: 'open_or_create',
-                    ttl:600,
+                    ttl:3600,
                     data: { agentALeft: false, agentASid: workerSid }
             });
             } catch (err: any) {
@@ -18,7 +18,7 @@ class SyncDocClass {
                     doc = await client.document({
                     id: docName,
                     mode: 'open_or_create',
-                    ttl:600,
+                    ttl:3600,
                     data: { agentALeft: false, agentASid: workerSid }
             });
                     return;
@@ -31,7 +31,7 @@ class SyncDocClass {
             if (error instanceof Error) {
                 logger.error('[sync-util] Failed to create warm transfer doc', error);
             } else {
-                logger.error('[[sync-util] Failed to create warm transfer doc', { message: 'Unknown error type', error });
+                logger.error('[sync-util] Failed to create warm transfer doc', { message: 'Unknown error type', error });
             }
         }
     };

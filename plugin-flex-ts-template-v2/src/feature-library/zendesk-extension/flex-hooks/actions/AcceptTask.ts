@@ -11,9 +11,6 @@ export const actionHook = function setAssigneeAfterAcceptTask(flex: typeof Flex)
   flex.Actions.addListener(`${actionEvent}${actionName}`, async (payload) => {
     if (!payload.task) return;
 
-    logger.info('[zendesk-extension] entered to acceptAction');
-
-
     await new Promise(resolve => setTimeout(resolve, 2000));
     
     if (!payload.task.incomingTransferObject || (payload.task.incomingTransferObject && payload.task.attributes.zendesk.transferType === "COLD")) {

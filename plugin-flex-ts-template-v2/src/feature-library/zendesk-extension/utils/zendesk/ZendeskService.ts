@@ -9,12 +9,7 @@ export const updateZendeskTicketAssignee = async (task: ITask,retries = 3, delay
     const zendeskUser = getZendeskUser();
 
     let ticketId = null;
-
-    console.log('[zendesk-extension] - updateZendeskTicketAssignee() selectedTicket:', selectedTicket);
-    console.log('[zendesk-extension] - updateZendeskTicketAssignee() zendeskUser:', zendeskUser);
-    console.log('[zendesk-extension] - updateZendeskTicketAssignee() zdClient:', zdClient);
     
-
     if (!task.attributes.zd_ticket_id) {
       ticketId=selectedTicket?.ticketId;
     }
