@@ -26,6 +26,8 @@ export const actionHook = function setAssigneeAfterAcceptTask(flex: typeof Flex)
       //add logic to listen updates from sync document waiting for agentA leave
       await SyncDoc.subscribeToWarmTransferDoc(syncDocName, () => {
         logger.info('Agent A has left the conference.');
+         updateZendeskTicketAssignee(payload.task);
+         setZendeskAssigneAttribute(payload.task.taskSid, 'updateAssignee', false);
       });
     }
 
