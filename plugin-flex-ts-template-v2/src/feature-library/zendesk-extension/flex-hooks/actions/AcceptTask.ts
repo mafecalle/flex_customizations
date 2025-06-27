@@ -8,29 +8,33 @@ import {setZdTicketIdAttribute,setZendeskAssigneAttribute} from '../../helpers/Z
 
 export const actionEvent = FlexActionEvent.after;
 export const actionName = FlexAction.AcceptTask;
+
+const updateTicketAssignee = async (task: any) => {
+  await updateZendeskTicketAssignee(task);
+  await setZendeskAssigneAttribute(task.taskSid, 'updateAssignee', false);
+  await setZdTicketIdAttribute(task);
+};
+
 export const actionHook = function setAssigneeAfterAcceptTask(flex: typeof Flex) {
   flex.Actions.addListener(`${actionEvent}${actionName}`, async (payload) => {
     if (!payload.task) return;
 
     clearSelectedTicket();
     
-    if (!payload.task.incomingTransferObject || (payload.task.incomingTransferObject && !payload.task.attributes.zendesk.isWarmTransfer)) {
-      await updateZendeskTicketAssignee(payload.task);
-      await setZendeskAssigneAttribute(payload.task.taskSid, 'updateAssignee', false);
-    }
-    else
-    {
+    const isWarmTransfer = payload.task.incomingTransferObject && payload.task.attributes.zendesk?.isWarmTransfer;
+    
+    if (!isWarmTransfer) {
+      await delay(2000);
+      await updateTicketAssignee(payload.task);
+    } else {
       const syncDocName = `warm-transfer-${payload.task.taskSid}`;
-
-      //add logic to listen updates from sync document waiting for agentA leave
       await SyncDoc.subscribeToWarmTransferDoc(syncDocName, async () => {
         logger.info('Agent A has left the conference.');
-         updateZendeskTicketAssignee(payload.task);
-         setZendeskAssigneAttribute(payload.task.taskSid, 'updateAssignee', false);
-         await SyncDoc.clearSyncDocData(syncDocName);
+        await updateTicketAssignee(payload.task);
+        await SyncDoc.clearSyncDocData(syncDocName);
       });
     }
-
-    await setZdTicketIdAttribute(payload.task);
   });
 };
+
+const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));

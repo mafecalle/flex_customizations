@@ -1,13 +1,14 @@
-let selectedTicket: any = {};
+let selectedTickets: any[] = [];
 let zendeskUser: any = {};
 
-export const getSelectedTicket = () => selectedTicket;
+export const getSelectedTicket = () => selectedTickets.reduce((highest, current) => 
+  (!highest || current.ticketId > highest.ticketId) ? current : highest, null);
 export const setSelectedTicket = (ticket: any) => {
-  selectedTicket = ticket;
+  selectedTickets.push(ticket);
 };
 
 export const clearSelectedTicket = () => {
-  selectedTicket = {};
+  selectedTickets = [];
 };
 
 export const getZendeskUser = () => zendeskUser;

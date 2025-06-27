@@ -30,11 +30,6 @@ export const eventHook = async function useInitializeZendeskClient () {
         setSelectedTicket(context);
       });
 
-      client.on('ticket.deactivated', () => {
-        console.log('[zendesk-extension] ticket.deactivated');
-        clearSelectedTicket();
-      });
-
       client.on('app.registered', () => {
         console.log('[zendesk-extension] app.registered');
       });
