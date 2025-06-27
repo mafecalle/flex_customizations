@@ -24,7 +24,7 @@ export const actionHook = function setAssigneeAfterAcceptTask(flex: typeof Flex)
     const isWarmTransfer = payload.task.incomingTransferObject && payload.task.attributes.zendesk?.isWarmTransfer;
     
     if (!isWarmTransfer) {
-      await delay(2000);
+      await delay(5000);
       await updateTicketAssignee(payload.task);
     } else {
       const syncDocName = `warm-transfer-${payload.task.taskSid}`;
