@@ -3,14 +3,14 @@ import { ITask } from '@twilio/flex-ui';
 import TaskRouterService from '../../../utils/serverless/TaskRouter/TaskRouterService';
 
 
-export const setZdTicketIdAttribute = async (task: ITask, retries = 3, delay = 4000): Promise<void> => {
+export const setZdTicketIdAttribute = async (task: ITask, retries = 5, delay = 3000): Promise<void> => {
   for (let attempt = 0; attempt < retries; attempt++) {
     const selectedTicket = getSelectedTicket();
 
     if (selectedTicket?.ticketId) {
       try {
         await TaskRouterService.updateTaskAttributes(task.taskSid, { zd_ticket_id: selectedTicket.ticketId });
-        console.log(`[zendesk-extension] Set ticketId:${selectedTicket.ticketId} for taskId: ${task.sid}`);
+        console.log(`[zendesk-extension] Set ticketId:${selectedTicket.ticketId} for taskId: ${task.taskSid}`);
         return;
       } catch (error) {
         console.error('[zendesk-extension] Failed to update task attributes:', error);
