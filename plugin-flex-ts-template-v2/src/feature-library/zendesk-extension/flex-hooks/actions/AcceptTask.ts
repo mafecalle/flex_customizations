@@ -2,14 +2,17 @@ import * as Flex from '@twilio/flex-ui';
 import { FlexActionEvent, FlexAction } from '../../../../types/feature-loader';
 import logger from '../../../../utils/logger';
 import { updateZendeskTicketAssignee } from '../../utils/zendesk/ZendeskService';
-import {setZdTicketIdAttribute,setZendeskAssigneAttribute} from '../../helpers/ZendeskExtensionHelper';
+import { clearSelectedTicket } from '../../utils/zendesk/ZendeskState';
 import { SyncDoc } from '../../utils/sync/Sync';
+import {setZdTicketIdAttribute,setZendeskAssigneAttribute} from '../../helpers/ZendeskExtensionHelper';
 
 export const actionEvent = FlexActionEvent.after;
 export const actionName = FlexAction.AcceptTask;
 export const actionHook = function setAssigneeAfterAcceptTask(flex: typeof Flex) {
   flex.Actions.addListener(`${actionEvent}${actionName}`, async (payload) => {
     if (!payload.task) return;
+
+    clearSelectedTicket();
 
     await new Promise(resolve => setTimeout(resolve, 2000));
     
@@ -22,10 +25,11 @@ export const actionHook = function setAssigneeAfterAcceptTask(flex: typeof Flex)
       const syncDocName = `warm-transfer-${payload.task.taskSid}`;
 
       //add logic to listen updates from sync document waiting for agentA leave
-      await SyncDoc.subscribeToWarmTransferDoc(syncDocName, () => {
+      await SyncDoc.subscribeToWarmTransferDoc(syncDocName, async () => {
         logger.info('Agent A has left the conference.');
          updateZendeskTicketAssignee(payload.task);
          setZendeskAssigneAttribute(payload.task.taskSid, 'updateAssignee', false);
+         await SyncDoc.clearSyncDocData(syncDocName);
       });
     }
 

@@ -16,6 +16,8 @@ export const actionHook = function reportHangUpByTransferTask(flex: typeof Flex,
         await setZendeskAssigneAttribute(payload.task.taskSid, "isWarmTransfer", true);
         const syncDocName = `warm-transfer-${payload.task.taskSid}`;
         await SyncDoc.createWarmTransferDocIfNotExists(syncDocName,payload.task.workerSid);
-    } 
+    } else {
+        await setZendeskAssigneAttribute(payload.task.taskSid, "isWarmTransfer", false);
+    }
   });
 };
