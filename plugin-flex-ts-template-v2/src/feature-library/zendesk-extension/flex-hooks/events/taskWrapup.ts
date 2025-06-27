@@ -1,5 +1,5 @@
 import * as Flex from '@twilio/flex-ui';
-
+import { clearSelectedTicket } from '../../utils/zendesk/ZendeskState';
 import { FlexEvent } from '../../../../types/feature-loader';
 import { SyncDoc } from '../../utils/sync/Sync';
 
@@ -9,6 +9,8 @@ export const eventHook = async (_flex: typeof Flex, _manager: Flex.Manager, task
   if (!task.attributes?.conference || !conference?.participants) {
     return;
   }
+
+  clearSelectedTicket();
 
   const { participants } = conference;
   const agentParticipants = participants.filter(

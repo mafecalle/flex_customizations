@@ -13,7 +13,7 @@ export const actionHook = function setAssigneeAfterAcceptTask(flex: typeof Flex)
 
     await new Promise(resolve => setTimeout(resolve, 2000));
     
-    if (!payload.task.incomingTransferObject || (payload.task.incomingTransferObject && payload.task.attributes.zendesk.transferType === "COLD")) {
+    if (!payload.task.incomingTransferObject || (payload.task.incomingTransferObject && !payload.task.attributes.zendesk.isWarmTransfer)) {
       await updateZendeskTicketAssignee(payload.task);
       await setZendeskAssigneAttribute(payload.task.taskSid, 'updateAssignee', false);
     }

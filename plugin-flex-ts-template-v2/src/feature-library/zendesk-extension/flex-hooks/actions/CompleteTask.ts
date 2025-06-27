@@ -12,5 +12,7 @@ export const actionHook = function handleDualChannelCompleteTask(flex: typeof Fl
     const syncDocName = `warm-transfer-${payload.task.taskSid}`;
     await SyncDoc.clearSyncDocData(syncDocName);
 
+    
+
   });
 };

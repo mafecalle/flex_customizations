@@ -2,7 +2,7 @@ import { getZendeskClient } from './ZendeskUtil';
 import { getSelectedTicket, getZendeskUser } from './ZendeskState';
 import { ITask } from '@twilio/flex-ui';
 
-export const updateZendeskTicketAssignee = async (task: ITask,retries = 3, delay = 4000): Promise<void> => {
+export const updateZendeskTicketAssignee = async (task: ITask,retries = 3, delay = 6000): Promise<void> => {
   for (let attempt = 0; attempt < retries; attempt++) {
     const zdClient = getZendeskClient();
     const selectedTicket = getSelectedTicket();

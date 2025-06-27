@@ -7,14 +7,13 @@ import logger from '../../../../utils/logger';
 export const actionEvent = FlexActionEvent.before;
 export const actionName = FlexAction.TransferTask;
 export const actionHook = function reportHangUpByTransferTask(flex: typeof Flex, _manager: Flex.Manager) {
-  flex.Actions.addListener(`${actionEvent}${actionName}`, async (payload, _abortFunction) => {
-
-    await setZendeskAssigneAttribute(payload.task.taskSid, payload.options.mode, true);
+  flex.Actions.addListener(`${actionEvent}${actionName}`, async (payload, _abortFunction) => {  
 
     logger.info("workerSid:",payload.task.workerSid);
 
     if(payload?.options?.mode === 'WARM')
     {
+        await setZendeskAssigneAttribute(payload.task.taskSid, "isWarmTransfer", true);
         const syncDocName = `warm-transfer-${payload.task.taskSid}`;
         await SyncDoc.createWarmTransferDocIfNotExists(syncDocName,payload.task.workerSid);
     } 
