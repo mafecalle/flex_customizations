@@ -1,0 +1,39 @@
+import {initZendeskClient} from '../../utils/zendesk/ZendeskUtil';
+import { isFeatureEnabled } from '../../config';
+import { FlexEvent } from '../../../../types/feature-loader';
+import { setSelectedTicket, setZendeskUser,clearSelectedTicket } from '../../utils/zendesk/ZendeskState';
+import logger from '../../../../utils/logger';
+
+export const eventName = FlexEvent.pluginsInitialized;
+export const eventHook = async function useInitializeZendeskClient () {
+
+   if (!isFeatureEnabled()) return;
+
+    console.log('[zendesk-extension] Initializing Zendesk client...');
+
+    const client = await initZendeskClient();
+    if (!client) return;
+
+    console.log('[zendesk-extension] Client initialized.');
+
+    try {
+      const data = await client.get('currentUser');
+      setZendeskUser(data);
+      console.log('[zendesk-extension] Current user:', data?.currentUser?.email);
+    } catch (err) {
+      console.error('[zendesk-extension] Failed to fetch currentUser:', err);
+    }
+
+    if (!client._flexListenersBound) {
+      client.on('ticket.activated', (context: any) => {
+        console.log('[zendesk-extension] ticket.activated:', context);
+        setSelectedTicket(context);
+      });
+
+      client.on('app.registered', () => {
+        console.log('[zendesk-extension] app.registered');
+      });
+
+      client._flexListenersBound = true;
+    }
+}

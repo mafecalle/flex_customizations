@@ -30,7 +30,7 @@ export const actionHook = function reportHangUpByHangupCall(flex: typeof Flex, _
       // Do nothing if there is another joined worker. If no other joined worker, the transfer didn't complete
       // Let's say AgentB hung up or didn't answer, but then we hang up--change it to Agent in this case.
       if (task.outgoingTransferObject && HangUpByHelper.hasAnotherWorkerJoined(task)) {
-        return;
+         return;
       }
     } else if (task.incomingTransferObject && HangUpByHelper.hasAnotherWorkerJoined(task)) {
       // If this is an incoming xfer and there is another worker in the "joined" state,

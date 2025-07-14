@@ -430,6 +430,9 @@
       },
       "flexinsights_callid": {
         "enabled": true
+      },
+      "zendesk_extension": {
+        "enabled": false
       }
     }
   }

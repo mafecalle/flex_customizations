@@ -12,5 +12,6 @@ export const actionHook = function reportHangUpByTransferTask(flex: typeof Flex,
       payload.sid,
       payload.options.mode === 'COLD' ? HangUpBy.ColdTransfer : HangUpBy.WarmTransfer,
     );
+    
   });
 };
